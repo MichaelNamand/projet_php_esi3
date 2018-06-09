@@ -21,7 +21,7 @@
                     <!-- Navigation. We hide it in small screens. -->
                     <nav class="mdl-navigation mdl-layout--large-screen-only">
                         <img class="login-img" src="assets/images/user.svg"> Michael Namand
-                        <a class="mdl-navigation__link" href="">Déconnexion</a>
+                        <a class="mdl-navigation__link" href="index.php">Déconnexion</a>
                     </nav>
                 </div>
             </header>

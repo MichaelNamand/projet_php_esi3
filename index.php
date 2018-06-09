@@ -10,12 +10,23 @@
     <body>
     <?php
     require ('connexion.php');
+    session_start();
+    if ($_SESSION['error']) {
+        unset($_SESSION);
+    }
+    if ($_POST['username'] && $_POST['password']) {
+        $_SESSION['error'] = 'Connexion en cours...';
+        $db = connectDB();
+        $test = $db.query('SELECT * FROM etudiants WHERE login = '. $_POST['username']);
+        print_r($test);
+    }
     ?>
 
     <div class="welcome-page">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
                 <h2 class="mdl-card__title-text">Projet QCM</h2>
+                <h3><?php echo $_SESSION['error']?></h3>
             </div>
             <div class="mdl-card__supporting-text">
                 Bienvenue dans ce questionnaire en ligne créé par Michael Namand. Pour commencer, cliquez.. sur Commencer ! Vous aurez besoin d'un identifiant et d'un code confidentiel pour continuer. Si vous n'en possédez pas, inscrivez-vous
@@ -31,15 +42,15 @@
 
     <dialog class="mdl-dialog" style="width: 500px; top: 50%; transform: translateY(-50%);" id="dialog-connexion">
         <h4 class="mdl-dialog__title">Connexion</h4>
-        <form action="home.php">
+        <form action="" method="post">
         <div class="mdl-dialog__content">
 
                 <div class="mdl-textfield mdl-js-textfield" id="div-id">
-                    <input class="mdl-textfield__input" type="text" id="id" required>
+                    <input class="mdl-textfield__input" name="username" type="text" id="id" required>
                     <label class="mdl-textfield__label" for="id">Identifiant</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-pass">
-                    <input class="mdl-textfield__input" type="password" id="pass" pattern="-?[0-9]*(\.[0-9]+)?" required>
+                    <input class="mdl-textfield__input" name="password" type="password" id="pass" pattern="-?[0-9]*(\.[0-9]+)?" required>
                     <label class="mdl-textfield__label" for="pass">Code confidentiel</label>
                     <span class="mdl-textfield__error">Veuillez entrer seulement des chiffres !</span>
                 </div>
@@ -54,28 +65,28 @@
 
     <dialog class="mdl-dialog" style="width: 500px; top: 50%; transform: translateY(-50%);" id="dialog-register">
         <h4 class="mdl-dialog__title">Inscription</h4>
-        <form action="connexion.php">
+        <form action="">
             <div class="mdl-dialog__content">
 
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-id">
-                    <input class="mdl-textfield__input" type="text" id="register-id" required>
+                    <input class="mdl-textfield__input" type="text" name="register-username" id="register-id" required>
                     <label class="mdl-textfield__label" for="register-id">Nom d'utilisateur</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-pass">
-                    <input class="mdl-textfield__input" type="password" id="register-pass" pattern="-?[0-9]*(\.[0-9]+)?" required>
+                    <input class="mdl-textfield__input" type="password" name="register-password" id="register-pass" pattern="-?[0-9]*(\.[0-9]+)?" required>
                     <label class="mdl-textfield__label" for="pass">Code confidentiel</label>
                     <span class="mdl-textfield__error">Veuillez entrer seulement des chiffres !</span>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-lname">
-                    <input class="mdl-textfield__input" type="text" id="register-lname" required>
+                    <input class="mdl-textfield__input" type="text" name="register-fname" id="register-lname" required>
                     <label class="mdl-textfield__label" for="register-lname">Nom</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-fname">
                     <input class="mdl-textfield__input" type="text" id="register-fname" required>
-                    <label class="mdl-textfield__label" for="register-fname">Prénom</label>
+                    <label class="mdl-textfield__label" for="register-fname" name="register-lname">Prénom</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-mail">
-                    <input class="mdl-textfield__input" type="email" id="register-mail" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                    <input class="mdl-textfield__input" type="email" id="register-mail" name="register-email" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                     <label class="mdl-textfield__label" for="register-mail">Email</label>
                     <span class="mdl-textfield__error">Email non valide !</span>
                 </div>
