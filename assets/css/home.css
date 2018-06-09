@@ -1,0 +1,19 @@
+body {
+    background: url("../images/Welcome_large.jpg") center;
+}
+.login-img {
+    border-radius: 50%;
+    background: white;
+    width: 40px;
+    margin-right: 15px;
+}
+
+.main {
+    height: auto;
+    width: auto;
+    position: fixed;
+    top: 150px;
+    bottom: 100px;
+    right: 100px;
+    left: 100px;
+}
