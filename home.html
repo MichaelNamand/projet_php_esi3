@@ -7,9 +7,11 @@
             <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
             <link rel="stylesheet" href="assets/css/home.css">
             <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+            <script type="text/javascript" src="./js/home.js"></script>
         </head>
     </head>
-    <body>
+    <body style="opacity: 0; transition: 0.4s">
         <!-- Always shows a header, even in smaller screens. -->
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
             <header class="mdl-layout__header">
@@ -20,16 +22,16 @@
                     <div class="mdl-layout-spacer"></div>
                     <!-- Navigation. We hide it in small screens. -->
                     <nav class="mdl-navigation mdl-layout--large-screen-only">
-                        <img class="login-img" src="assets/images/user.svg"> Michael Namand
-                        <a class="mdl-navigation__link" href="index.php">Déconnexion</a>
+                        <img class="login-img" src="assets/images/user.svg"> <span class="header-profile-name"></span>
+                        <a class="mdl-navigation__link disconnect-btn">Déconnexion</a>
                     </nav>
                 </div>
             </header>
             <div class="mdl-layout__drawer">
                 <span class="mdl-layout-title">Option</span>
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href=""><img class="" src="assets/images/user.svg"> Michael Namand</a>
-                    <a class="mdl-navigation__link" href="">Déconnexion</a>
+                    <a class="mdl-navigation__link" href=""><img class="" src="assets/images/user.svg"> <span class="header-profile-name"></span></a>
+                    <a class="mdl-navigation__link disconnect-btn" href="#">Déconnexion</a>
                 </nav>
             </div>
             <main class="mdl-layout__content">
@@ -70,20 +72,5 @@
                 </div>
             </main>
         </div>
-
-        <script>
-            var dialog = document.querySelector('dialog');
-            dialog.showModal();
-            var showDialogButton = document.querySelector('#show-dialog');
-            if (! dialog.showModal) {
-                dialogPolyfill.registerDialog(dialog);
-            }
-            showDialogButton.addEventListener('click', function() {
-                dialog.showModal();
-            });
-            dialog.querySelector('.close').addEventListener('click', function() {
-                dialog.close();
-            });
-        </script>
     </body>
 </html>

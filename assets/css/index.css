@@ -29,6 +29,11 @@
     animation: Gradient 15s ease infinite;
 }
 
+#body {
+    opacity: 1;
+    transition: 0.4s;
+}
+
 .login-img {
     width: 140px;
     position: absolute;

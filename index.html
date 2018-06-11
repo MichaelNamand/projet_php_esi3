@@ -6,33 +6,23 @@
         <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
         <link rel="stylesheet" href="assets/css/index.css">
         <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="./js/index.js"></script>
     </head>
-    <body>
-    <?php
-    require ('connexion.php');
-    session_start();
-    if ($_SESSION['error']) {
-        unset($_SESSION);
-    }
-    if ($_POST['username'] && $_POST['password']) {
-        $_SESSION['error'] = 'Connexion en cours...';
-        $db = connectDB();
-        $test = $db.query('SELECT * FROM etudiants WHERE login = '. $_POST['username']);
-        print_r($test);
-    }
-    ?>
+    <body id="body" style="opacity: 1; transition: 0.4s;">
 
     <div class="welcome-page">
         <div class="demo-card-wide mdl-card mdl-shadow--2dp">
             <div class="mdl-card__title">
                 <h2 class="mdl-card__title-text">Projet QCM</h2>
-                <h3><?php echo $_SESSION['error']?></h3>
             </div>
             <div class="mdl-card__supporting-text">
-                Bienvenue dans ce questionnaire en ligne créé par Michael Namand. Pour commencer, cliquez.. sur Commencer ! Vous aurez besoin d'un identifiant et d'un code confidentiel pour continuer. Si vous n'en possédez pas, inscrivez-vous
-                <a href="#" id="show-dialog-register">ici</a> !
+                Bienvenue dans ce questionnaire en ligne créé par Michael Namand. Pour commencer, cliquez.. sur Commencer ! Vous aurez besoin d'un identifiant et d'un code confidentiel pour continuer. Si vous n'en possédez pas, inscrivez-vous, tout simplement!
             </div>
             <div class="mdl-card__actions mdl-card--border" style="text-align: right">
+                <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="show-dialog-register">
+                    S'inscrire
+                </a>
                 <a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" id="show-dialog-connexion">
                     Commencer
                 </a>
@@ -42,15 +32,16 @@
 
     <dialog class="mdl-dialog" style="width: 500px; top: 50%; transform: translateY(-50%);" id="dialog-connexion">
         <h4 class="mdl-dialog__title">Connexion</h4>
-        <form action="" method="post">
+        <form onsubmit="event.preventDefault(); login();">
         <div class="mdl-dialog__content">
 
                 <div class="mdl-textfield mdl-js-textfield" id="div-id">
-                    <input class="mdl-textfield__input" name="username" type="text" id="id" required>
+                    <input class="mdl-textfield__input" name="username" type="text" id="id" autocomplete="username" pattern="[A-Z,a-z, 0-9]*" required>
                     <label class="mdl-textfield__label" for="id">Identifiant</label>
+                    <span class="mdl-textfield__error">Veuillez entrer une nom d'utilisateur valide !</span>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-pass">
-                    <input class="mdl-textfield__input" name="password" type="password" id="pass" pattern="-?[0-9]*(\.[0-9]+)?" required>
+                    <input class="mdl-textfield__input" name="password" type="password" id="pass" autocomplete="username"  pattern="-?[0-9]*(\.[0-9]+)?" required>
                     <label class="mdl-textfield__label" for="pass">Code confidentiel</label>
                     <span class="mdl-textfield__error">Veuillez entrer seulement des chiffres !</span>
                 </div>
@@ -65,8 +56,8 @@
 
     <dialog class="mdl-dialog" style="width: 500px; top: 50%; transform: translateY(-50%);" id="dialog-register">
         <h4 class="mdl-dialog__title">Inscription</h4>
-        <form action="">
-            <div class="mdl-dialog__content">
+        <form onsubmit="event.preventDefault(); registers();">
+            <div class="mdl-dialog__content" id="div-register">
 
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-id">
                     <input class="mdl-textfield__input" type="text" name="register-username" id="register-id" required>
@@ -77,13 +68,13 @@
                     <label class="mdl-textfield__label" for="pass">Code confidentiel</label>
                     <span class="mdl-textfield__error">Veuillez entrer seulement des chiffres !</span>
                 </div>
-                <div class="mdl-textfield mdl-js-textfield" id="div-register-lname">
-                    <input class="mdl-textfield__input" type="text" name="register-fname" id="register-lname" required>
-                    <label class="mdl-textfield__label" for="register-lname">Nom</label>
-                </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-fname">
-                    <input class="mdl-textfield__input" type="text" id="register-fname" required>
-                    <label class="mdl-textfield__label" for="register-fname" name="register-lname">Prénom</label>
+                    <input class="mdl-textfield__input" type="text" name="register-fname" id="register-fname" required>
+                    <label class="mdl-textfield__label" for="register-fname">Nom</label>
+                </div>
+                <div class="mdl-textfield mdl-js-textfield" id="div-register-lname">
+                    <input class="mdl-textfield__input" type="text" name="register-lname" id="register-lname" required>
+                    <label class="mdl-textfield__label" for="register-lname">Prénom</label>
                 </div>
                 <div class="mdl-textfield mdl-js-textfield" id="div-register-mail">
                     <input class="mdl-textfield__input" type="email" id="register-mail" name="register-email" pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
@@ -99,51 +90,4 @@
         </form>
     </dialog>
     </body>
-    <script>
-        // gestion connexion dialog
-        const dialog = document.getElementById('dialog-connexion');
-        const showDialogButton = document.querySelector('#show-dialog-connexion');
-        if (! dialog.showModal) {
-            dialogPolyfill.registerDialog(dialog);
-        }
-        showDialogButton.addEventListener('click', function() {
-            dialog.classList.add('anim-appear');
-            dialog.classList.remove('anim-disappear');
-            document.getElementById('div-id').classList.remove('is-invalid');
-            document.getElementById('div-pass').classList.remove('is-invalid');
-            dialog.showModal();
-        });
-        dialog.querySelector('.close').addEventListener('click', function() {
-            dialog.classList.remove('anim-appear');
-            dialog.classList.add('anim-disappear');
-            setTimeout(() => {
-                dialog.close();
-            }, 401);
-        });
-
-        // gestion register dialog
-        const dialogRegister = document.getElementById('dialog-register');
-        const showDialogRegisterButton = document.querySelector('#show-dialog-register');
-        if (! dialogRegister.showModal) {
-            dialogPolyfill.registerDialog(dialog);
-        }
-        showDialogRegisterButton.addEventListener('click', function() {
-            dialogRegister.classList.add('anim-appear');
-            dialogRegister.classList.remove('anim-disappear');
-            let tf = dialogRegister.getElementsByClassName('mdl-textfield');
-            console.log(tf);
-            for (let i = 0; i < tf.length; i++) {
-                tf[i].classList.remove('is-invalid');
-            }
-            document.getElementById('div-pass').classList.remove('is-invalid');
-            dialogRegister.showModal();
-        });
-        dialogRegister.querySelector('.close').addEventListener('click', function() {
-            dialogRegister.classList.remove('anim-appear');
-            dialogRegister.classList.add('anim-disappear');
-            setTimeout(() => {
-                dialogRegister.close();
-            }, 401);
-        });
-    </script>
 </html>
