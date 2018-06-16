@@ -61,10 +61,10 @@ function login () {
         success:function(data) {
             const result =(JSON.parse(data));
             console.log(result);
-            if (result.status === 'error') {
+            if (result === 'error') {
                 alert('Identifiant ou mot de passe incorrect !')
             } else {
-                localStorage.setItem('user', JSON.stringify(result.status));
+                localStorage.setItem('user', JSON.stringify(result));
                 const dialog = document.getElementById('dialog-connexion');
                 dialog.classList.remove('anim-appear');
                 dialog.classList.add('anim-disappear');
@@ -72,7 +72,7 @@ function login () {
                 setTimeout(() => {
                     dialog.close();
                     window.location.href = "home.html";
-                }, 401);
+                }, 350);
 
             }
         },

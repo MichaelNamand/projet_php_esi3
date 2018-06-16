@@ -1,0 +1,28 @@
+
+
+@keyframes wobble-in {
+    0% {
+        transform: translateY(-250%);
+    }
+    100% {
+        transform: translateY(-50%);
+    } }
+
+
+@keyframes wobble-out {
+    0% {
+        transform: translateY(-50%);
+    }
+    100% {
+        transform: translateY(-250%);
+    }
+}
+
+
+.anim-appear {
+    animation: wobble-in 0.4s ease;
+}
+
+.anim-disappear {
+    animation: wobble-out 0.4s ease;
+}
