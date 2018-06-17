@@ -24,6 +24,7 @@ foreach ($questionnaires as $key => $questionnaire) {
     foreach ($QCMFaits as $QCMFait) {
         if ($QCMFait['idQuestionnaire'] == $questionnaire['idQuestionnaire'] && $QCMFait['idEtudiant'] == $_SESSION['user']['idEtudiant']){
             $questionnaires[$key]['date_done'] = $QCMFait['dateFait'];
+            $questionnaires[$key]['point'] = $QCMFait['point'];
         }
     }
 

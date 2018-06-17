@@ -1,5 +1,5 @@
+let user;
 document.addEventListener("DOMContentLoaded", function(event) {
-    let user;
     if (localStorage.getItem('user')) {
         user = JSON.parse(localStorage.getItem('user'));
         const spans = document.getElementsByClassName('header-profile-name');
@@ -62,6 +62,7 @@ function getQuestionnaires() {
 
 function displayQuestionnaires() {
     const table = document.getElementById('table-body');
+    table.innerHTML = '';
     if (questionnaires.length > 0) {
         for (let i = 0; i < questionnaires.length; i++) {
             const tr = document.createElement('tr');
@@ -69,12 +70,13 @@ function displayQuestionnaires() {
             const td2 = document.createElement('td');
             const td3 = document.createElement('td');
             const td4 = document.createElement('td');
+            const td5 = document.createElement('td');
             const btn = document.createElement('button');
 
             td1.textContent = questionnaires[i].idQuestionnaire;
             td2.textContent = questionnaires[i].libelleQuestionnaire;
             questionnaires[i].date_done ? td3.textContent = questionnaires[i].date_done : td3.textContent = '-';
-
+            questionnaires[i].point ? td4.textContent = questionnaires[i].point + ' %' : td4.textContent = '-';
 
             btn.classList.add('show-dialog-questionnaire', 'mdl-button', 'mdl-js-button', 'mdl-button--raised', 'mdl-button--raised', 'mdl-js-ripple-effect', 'mdl-button--colored');
             btn.textContent = 'Commencer';
@@ -90,14 +92,15 @@ function displayQuestionnaires() {
 
             td2.classList.add('mdl-data-table__cell--non-numeric');
             td3.classList.add('mdl-data-table__cell--non-numeric');
-            td4.classList.add('mdl-data-table__cell--non-numeric');
+            td5.classList.add('mdl-data-table__cell--non-numeric');
 
-            td4.appendChild(btn);
+            td5.appendChild(btn);
 
             tr.appendChild(td1);
             tr.appendChild(td2);
             tr.appendChild(td3);
             tr.appendChild(td4);
+            tr.appendChild(td5);
 
             table.appendChild(tr);
         }
@@ -209,12 +212,15 @@ function finishQuestionnaire(id) {
     dialogQuestionnaire.querySelector('.close').click();
     const pReussite = parseFloat((bonnesReponsesUser / bonnesReponsesTotal) * 100).toFixed(0);
     let message = 'Vous avez terminé le questionnaire. Votre pourcentage total de réponses justes est de ' + pReussite + '%.';
-    if (pReussite < 50) {
+    if (pReussite === 0) {
+        message += 'Dommage, vous aurez peut-être une réponse juste la prochaine fois !';
+
+    }else if (pReussite < 50) {
         message += ' Peut mieux faire !';
     } else if (pReussite > 50) {
-        message += 'Excellent résultat ! Nous sommes sûrs que vous pouvez faire mieux ;-)'
+        message += ' Excellent résultat ! Nous sommes sûrs que vous pouvez faire mieux ;-)'
     } else {
-        message += 'Félicitation ! Vous avez répondu juste à toutes les questions !';
+        message += ' Félicitation ! Vous avez répondu juste à toutes les questions !';
     }
     document.getElementById('results').textContent = message;
     const dialogFinish = document.getElementById('dialog-finish');
@@ -227,6 +233,20 @@ function finishQuestionnaire(id) {
         setTimeout(() => {
             dialogFinish.close();
         }, 401);
+    });
+    var today  = new Date();
+    $.ajax({
+        type:'POST',
+        url:'./php/home/sendQuestionnaire.php',
+        data: 'idEtudiant='+user.idEtudiant + '&idQuestionnaire=' + questionnaires[id].idQuestionnaire + '&dateFait=' + today.toLocaleDateString("fr-FR") + '&point=' + pReussite,
+        success:function(data) {
+            console.log(data);
+            getQuestionnaires();
+        },
+        error : function(error) {
+            console.log(error);
+            alert('Erreur du serveur. Réessayer plus tard.');
+        }
     });
 }
 
