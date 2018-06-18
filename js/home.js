@@ -19,6 +19,27 @@ document.addEventListener("DOMContentLoaded", function(event) {
         })
     }
 
+    const dialogDisconnect = document.getElementById('dialog-disconnect');
+    if (! dialogDisconnect.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+
+    document.getElementById('disconnect').addEventListener('click', () => {
+        console.log('here');
+        const dialogDisconnect = document.getElementById('dialog-disconnect');
+        dialogDisconnect.classList.add('anim-appear');
+        dialogDisconnect.classList.remove('anim-disappear');
+        dialogDisconnect.showModal();
+    });
+
+    dialogDisconnect.querySelector('.close').addEventListener('click', () => {
+        dialogDisconnect.classList.remove('anim-appear');
+        dialogDisconnect.classList.add('anim-disappear');
+        setTimeout(() => {
+            dialogQuestionnaire.close();
+        }, 401);
+    });
+
     const dialogQuestionnaire = document.getElementById('dialog-questionnaire');
 
     if (! dialogQuestionnaire.showModal) {

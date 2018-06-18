@@ -14,10 +14,10 @@ if ($_POST['username-register']) {
     if($result){
         //What you do here is up to you!
         echo 'Merci pour votre inscription ! Vous pouvez maintenant vous connecter avec vos identifiants.';
-    } else { echo 'error';}
+    } else { echo json_encode($_POST); }
 
 } else {
-    echo 'error';
+    echo 'error post';
 }
 
 
